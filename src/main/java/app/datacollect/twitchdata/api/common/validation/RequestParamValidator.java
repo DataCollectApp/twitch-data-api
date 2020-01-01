@@ -15,4 +15,15 @@ public class RequestParamValidator {
       return Optional.empty();
     }
   }
+
+  public Optional<ErrorMessage> validateLimit(int limit) {
+    if (limit < 0 || limit > 100) {
+      return Optional.of(
+          new ErrorMessage(
+              "INVALID_LIMIT",
+              "Limit must be a number between 0 and 100 (inclusive)",
+              UTCDateTime.now().iso8601()));
+    }
+    return Optional.empty();
+  }
 }

@@ -20,7 +20,8 @@ public class NameChangeController {
   private final NameChangeService service;
   private final NameChangeResourceAssembler resourceAssembler;
 
-  public NameChangeController(NameChangeService service, NameChangeResourceAssembler resourceAssembler) {
+  public NameChangeController(
+      NameChangeService service, NameChangeResourceAssembler resourceAssembler) {
     this.service = service;
     this.resourceAssembler = resourceAssembler;
   }
@@ -29,15 +30,21 @@ public class NameChangeController {
   public ResponseEntity<List<NameChangeResource>> getNameChanges(
       @RequestParam(value = "sortBy", defaultValue = "discoveredTime") SortBy sortBy,
       @RequestParam(value = "sortDirection", defaultValue = "ASC") SortDirection sortDirection,
-      @RequestParam(value = "limit", defaultValue = "100") int limit) {
-    return ResponseEntity.ok(resourceAssembler.assemble(service.getNameChanges(sortBy, sortDirection, limit)));
+      @RequestParam(value = "limit", defaultValue = "100") int limit,
+      @RequestParam(value = "excludeOrigin", defaultValue = "false") boolean excludeOrigin) {
+    return ResponseEntity.ok(
+        resourceAssembler.assemble(
+            service.getNameChanges(sortBy, sortDirection, limit, excludeOrigin)));
   }
 
   @GetMapping("/{user-id}")
   public ResponseEntity<List<NameChangeResource>> getNameChangesByUserId(
       @PathVariable("user-id") long userId,
       @RequestParam(value = "sortBy", defaultValue = "discoveredTime") SortBy sortBy,
-      @RequestParam(value = "sortDirection", defaultValue = "ASC") SortDirection sortDirection) {
-    return ResponseEntity.ok(resourceAssembler.assemble(service.getNameChangesByUserId(userId, sortBy, sortDirection)));
+      @RequestParam(value = "sortDirection", defaultValue = "ASC") SortDirection sortDirection,
+      @RequestParam(value = "excludeOrigin", defaultValue = "false") boolean excludeOrigin) {
+    return ResponseEntity.ok(
+        resourceAssembler.assemble(
+            service.getNameChangesByUserId(userId, sortBy, sortDirection, excludeOrigin)));
   }
 }

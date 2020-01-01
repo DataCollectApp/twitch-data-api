@@ -44,11 +44,13 @@ public class NameChangeService {
     return repository.getNameChanges(userId);
   }
 
-  public List<NameChange> getNameChanges(SortBy sortBy, SortDirection sortDirection, int limit) {
-    return repository.getNameChanges(sortBy, sortDirection, limit);
+  public List<NameChange> getNameChanges(
+      SortBy sortBy, SortDirection sortDirection, int limit, boolean excludeOrigin) {
+    return repository.getNameChanges(sortBy, sortDirection, limit, excludeOrigin);
   }
 
-  public List<NameChange> getNameChangesByUserId(long userId, SortBy sortBy, SortDirection sortDirection) {
-    return repository.getNameChangesByUserId(userId, sortBy, sortDirection);
+  public List<NameChange> getNameChangesByUserId(
+      long userId, SortBy sortBy, SortDirection sortDirection, boolean excludeOrigin) {
+    return repository.getNameChangesByUserId(userId, sortBy, sortDirection, excludeOrigin);
   }
 }

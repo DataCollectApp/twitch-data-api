@@ -56,22 +56,33 @@ public class NameChangeRepository {
         this::mapRow);
   }
 
-  public List<NameChange> getNameChanges(SortBy sortBy, SortDirection sortDirection, int limit) {
+  public List<NameChange> getNameChanges(
+      SortBy sortBy, SortDirection sortDirection, int limit, boolean excludeOrigin) {
     return jdbcTemplate.query(
         "SELECT id, user_id, old_username, new_username, discovered_time, discovered_channel "
             + "FROM name_change "
-            + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName() + " LIMIT " + limit,
+            + (excludeOrigin ? "WHERE old_username IS NOT NULL " : "")
+            + "ORDER BY "
+            + sortBy.getDatabaseName()
+            + " "
+            + sortDirection.getDatabaseName()
+            + " LIMIT "
+            + limit,
         this::mapRow);
   }
 
-  public List<NameChange> getNameChangesByUserId(long userId, SortBy sortBy, SortDirection sortDirection) {
-    return jdbcTemplate.query(
+  public List<NameChange> getNameChangesByUserId(
+      long userId, SortBy sortBy, SortDirection sortDirection, boolean excludeOrigin) {
+    final var sql =
         "SELECT id, user_id, old_username, new_username, discovered_time, discovered_channel "
             + "FROM name_change "
             + "WHERE user_id = :user_id "
-            + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName(),
-        Map.of("user_id", userId),
-        this::mapRow);
+            + (excludeOrigin ? "AND old_username IS NOT NULL " : "")
+            + "ORDER BY "
+            + sortBy.getDatabaseName()
+            + " "
+            + sortDirection.getDatabaseName();
+    return jdbcTemplate.query(sql, Map.of("user_id", userId), this::mapRow);
   }
 
   private NameChange mapRow(ResultSet resultSet, int rowNum) throws SQLException {

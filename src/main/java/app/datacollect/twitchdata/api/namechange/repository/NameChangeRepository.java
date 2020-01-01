@@ -73,7 +73,7 @@ public class NameChangeRepository {
 
   public List<NameChange> getNameChangesByUserId(
       long userId, SortBy sortBy, SortDirection sortDirection, boolean excludeOrigin) {
-    final var sql =
+    return jdbcTemplate.query(
         "SELECT id, user_id, old_username, new_username, discovered_time, discovered_channel "
             + "FROM name_change "
             + "WHERE user_id = :user_id "
@@ -81,8 +81,9 @@ public class NameChangeRepository {
             + "ORDER BY "
             + sortBy.getDatabaseName()
             + " "
-            + sortDirection.getDatabaseName();
-    return jdbcTemplate.query(sql, Map.of("user_id", userId), this::mapRow);
+            + sortDirection.getDatabaseName(),
+        Map.of("user_id", userId),
+        this::mapRow);
   }
 
   private NameChange mapRow(ResultSet resultSet, int rowNum) throws SQLException {

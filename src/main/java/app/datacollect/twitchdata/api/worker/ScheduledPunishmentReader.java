@@ -137,7 +137,7 @@ public class ScheduledPunishmentReader {
   private boolean process(ClearChatEventV1 event) {
     try {
       final Optional<TwitchUser> twitchUser =
-          twitchUserService.getTwitchUser(event.getTargetUsername());
+          twitchUserService.getTwitchUser(Long.parseLong(event.getTargetUserId()));
       if (twitchUser.isEmpty()) {
         logger.error(
             "No twitch user with username '{}' found when processing clear chat event with id '{}'",

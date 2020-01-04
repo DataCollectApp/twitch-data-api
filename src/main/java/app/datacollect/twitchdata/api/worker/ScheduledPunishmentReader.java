@@ -86,12 +86,13 @@ public class ScheduledPunishmentReader {
     Optional<String> lastProcessedId = Optional.empty();
     for (int i = 0; i < events.size() && success; i++) {
       final Event event = events.get(i);
+      final String eventId = event.getMetadata().getEventId().toString();
       if (event.getEventData() instanceof ClearMessageEventV1) {
-        success = process((ClearMessageEventV1) event.getEventData());
+        success = process((ClearMessageEventV1) event.getEventData(), eventId);
       } else if (event.getEventData() instanceof ClearChatEventV1) {
-        success = process((ClearChatEventV1) event.getEventData());
+        success = process((ClearChatEventV1) event.getEventData(), eventId);
       } else if (event.getEventData() instanceof GlobalClearChatEventV1) {
-        success = process((GlobalClearChatEventV1) event.getEventData());
+        success = process((GlobalClearChatEventV1) event.getEventData(), eventId);
       } else {
         logger.warn(
             "Encountered unexpected event with id '{}', type '{}', object type '{}' and version '{}'",
@@ -124,7 +125,7 @@ public class ScheduledPunishmentReader {
     }
   }
 
-  private boolean process(ClearMessageEventV1 event) {
+  private boolean process(ClearMessageEventV1 event, String eventId) {
     try {
       final Optional<TwitchUser> twitchUser =
           twitchUserService.getTwitchUser(event.getTargetUsername());
@@ -132,7 +133,7 @@ public class ScheduledPunishmentReader {
         logger.error(
             "No twitch user with username '{}' found when processing clear message event with id '{}'",
             event.getTargetUsername(),
-            event.getId());
+            eventId);
         return false;
       }
       clearMessageService.insert(clearMessageAssembler.assemble(event, twitchUser.get().getId()));
@@ -141,13 +142,13 @@ public class ScheduledPunishmentReader {
       logger.error(
           "Exception occurred while processing '{}' with id '{}'",
           event.getEventType(),
-          event.getId(),
+          eventId,
           ex);
       return false;
     }
   }
 
-  private boolean process(ClearChatEventV1 event) {
+  private boolean process(ClearChatEventV1 event, String eventId) {
     try {
       final Optional<TwitchUser> twitchUser =
           twitchUserService.getTwitchUser(Long.parseLong(event.getTargetUserId()));
@@ -155,7 +156,7 @@ public class ScheduledPunishmentReader {
         logger.error(
             "No twitch user with username '{}' found when processing clear chat event with id '{}'",
             event.getTargetUsername(),
-            event.getId());
+            eventId);
         return false;
       }
       clearChatService.insert(clearChatAssembler.assemble(event));
@@ -164,13 +165,13 @@ public class ScheduledPunishmentReader {
       logger.error(
           "Exception occurred while processing '{}' with id '{}'",
           event.getEventType(),
-          event.getId(),
+          eventId,
           ex);
       return false;
     }
   }
 
-  private boolean process(GlobalClearChatEventV1 event) {
+  private boolean process(GlobalClearChatEventV1 event, String eventId) {
     try {
       globalClearChatService.insert(globalClearChatAssembler.assemble(event));
       return true;
@@ -178,7 +179,7 @@ public class ScheduledPunishmentReader {
       logger.error(
           "Exception occurred while processing '{}' with id '{}'",
           event.getEventType(),
-          event.getId(),
+          eventId,
           ex);
       return false;
     }

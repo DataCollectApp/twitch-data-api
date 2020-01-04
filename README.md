@@ -19,3 +19,4 @@ The following properties are required to run the application:
 | TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_USERNAME | Username to the feed |
 | TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_PASSWORD | Password to the feed |
 | TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_PAGE_SIZE | The amount of events to read at a time |
+| FEATURE_TOGGLE_SHOULD_READ_PUNISHMENTS | Toggle whether the application should read punishments |

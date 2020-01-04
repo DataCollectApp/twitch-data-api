@@ -44,6 +44,10 @@ public class NameChangeService {
     return repository.getNameChanges(userId);
   }
 
+  public List<NameChange> getNameChangesByOldUsername(String oldUsername) {
+    return repository.getNameChangesByOldUsername(oldUsername);
+  }
+
   public List<NameChange> getNameChanges(
       SortBy sortBy, SortDirection sortDirection, int limit, boolean excludeOrigin) {
     return repository.getNameChanges(sortBy, sortDirection, limit, excludeOrigin);

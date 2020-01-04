@@ -56,6 +56,13 @@ public class NameChangeRepository {
         this::mapRow);
   }
 
+  public List<NameChange> getNameChangesByOldUsername(String oldUsername) {
+    return jdbcTemplate.query(
+        "SELECT id, user_id, old_username, new_username, discovered_time, discovered_channel FROM name_change WHERE old_username = :old_username",
+        Map.of("old_username", oldUsername),
+        this::mapRow);
+  }
+
   public List<NameChange> getNameChanges(
       SortBy sortBy, SortDirection sortDirection, int limit, boolean excludeOrigin) {
     return jdbcTemplate.query(

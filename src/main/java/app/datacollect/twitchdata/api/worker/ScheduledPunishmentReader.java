@@ -4,6 +4,7 @@ import app.datacollect.twitchdata.api.clearchat.assembler.ClearChatAssembler;
 import app.datacollect.twitchdata.api.clearchat.service.ClearChatService;
 import app.datacollect.twitchdata.api.clearmessage.assembler.ClearMessageAssembler;
 import app.datacollect.twitchdata.api.clearmessage.service.ClearMessageService;
+import app.datacollect.twitchdata.api.config.FeatureToggle;
 import app.datacollect.twitchdata.api.globalclearchat.assembler.GlobalClearChatAssembler;
 import app.datacollect.twitchdata.api.globalclearchat.service.GlobalClearChatService;
 import app.datacollect.twitchdata.api.lastread.service.LastReadService;
@@ -32,6 +33,7 @@ public class ScheduledPunishmentReader {
 
   private final TwitchDataFeedReader twitchDataFeedReader;
   private final LastReadService lastReadService;
+  private final FeatureToggle featureToggle;
   private final ClearMessageService clearMessageService;
   private final ClearMessageAssembler clearMessageAssembler;
   private final ClearChatService clearChatService;
@@ -43,6 +45,7 @@ public class ScheduledPunishmentReader {
   public ScheduledPunishmentReader(
       @Qualifier("punishmentFeedReader") TwitchDataFeedReader twitchDataFeedReader,
       LastReadService lastReadService,
+      FeatureToggle featureToggle,
       ClearMessageService clearMessageService,
       ClearMessageAssembler clearMessageAssembler,
       ClearChatService clearChatService,
@@ -52,6 +55,7 @@ public class ScheduledPunishmentReader {
       TwitchUserService twitchUserService) {
     this.twitchDataFeedReader = twitchDataFeedReader;
     this.lastReadService = lastReadService;
+    this.featureToggle = featureToggle;
     this.clearMessageService = clearMessageService;
     this.clearMessageAssembler = clearMessageAssembler;
     this.clearChatService = clearChatService;
@@ -63,6 +67,10 @@ public class ScheduledPunishmentReader {
 
   @Scheduled(fixedDelay = 5000)
   public void process() {
+    if (!featureToggle.getShouldReadPunishments()) {
+      logger.debug("Not reading from punishment feed since feature toggle is false");
+      return;
+    }
     processPage();
   }
 
@@ -128,6 +136,15 @@ public class ScheduledPunishmentReader {
 
   private boolean process(ClearChatEventV1 event) {
     try {
+      final Optional<TwitchUser> twitchUser =
+          twitchUserService.getTwitchUser(event.getTargetUsername());
+      if (twitchUser.isEmpty()) {
+        logger.error(
+            "No twitch user with username '{}' found when processing clear chat event with id '{}'",
+            event.getTargetUsername(),
+            event.getId());
+        return false;
+      }
       clearChatService.insert(clearChatAssembler.assemble(event));
       return true;
     } catch (Exception ex) {

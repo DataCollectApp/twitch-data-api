@@ -2,6 +2,7 @@ package app.datacollect.twitchdata.api.twitchuser.service;
 
 import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
 import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
+import app.datacollect.twitchdata.api.namechange.service.NameChangeService;
 import app.datacollect.twitchdata.api.twitchuser.domain.TwitchUser;
 import app.datacollect.twitchdata.api.twitchuser.repository.TwitchUserRepository;
 import java.util.List;
@@ -16,9 +17,11 @@ public class TwitchUserService {
   private static final Logger logger = LoggerFactory.getLogger(TwitchUserService.class);
 
   private final TwitchUserRepository repository;
+  private final NameChangeService nameChangeService;
 
-  public TwitchUserService(TwitchUserRepository repository) {
+  public TwitchUserService(TwitchUserRepository repository, NameChangeService nameChangeService) {
     this.repository = repository;
+    this.nameChangeService = nameChangeService;
   }
 
   public void saveTwitchUser(TwitchUser twitchUser) {
@@ -40,7 +43,11 @@ public class TwitchUserService {
   }
 
   public Optional<TwitchUser> getTwitchUser(String username) {
-    return repository.getTwitchUser(username);
+    final Optional<TwitchUser> twitchUser = repository.getTwitchUser(username);
+    if (twitchUser.isPresent()) {
+      return twitchUser;
+    }
+    return nameChangeService.getNameChangesByOldUsername(username).stream().findFirst().flatMap(nameChange -> repository.getTwitchUser(nameChange.getUserId()));
   }
 
   public List<TwitchUser> getTwitchUsers() {

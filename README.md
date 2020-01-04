@@ -15,3 +15,7 @@ The following properties are required to run the application:
 | TWITCH_DATA_FEED_READER_CHAT_MESSAGE_FEED_USERNAME | Username to the feed |
 | TWITCH_DATA_FEED_READER_CHAT_MESSAGE_FEED_PASSWORD | Password to the feed |
 | TWITCH_DATA_FEED_READER_CHAT_MESSAGE_FEED_PAGE_SIZE | The amount of events to read at a time |
+| TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_URL | URL to the feed of punishments |
+| TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_USERNAME | Username to the feed |
+| TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_PASSWORD | Password to the feed |
+| TWITCH_DATA_FEED_READER_PUNISHMENT_FEED_PAGE_SIZE | The amount of events to read at a time |

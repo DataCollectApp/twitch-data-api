@@ -34,4 +34,20 @@ public class BaseConfig {
   public FeedProperties chatMessageFeedProperties() {
     return new FeedProperties();
   }
+
+  @Bean("punishmentFeedReader")
+  public TwitchDataFeedReader punishmentFeedReader(
+      @Qualifier("punishmentFeedProperties") FeedProperties feedProperties) {
+    return new TwitchDataFeedReader(
+        feedProperties.getUrl(),
+        feedProperties.getUsername(),
+        feedProperties.getPassword(),
+        feedProperties.getPageSize());
+  }
+
+  @Bean("punishmentFeedProperties")
+  @ConfigurationProperties("twitch-data-feed-reader.punishment-feed")
+  public FeedProperties punishmentFeedProperties() {
+    return new FeedProperties();
+  }
 }

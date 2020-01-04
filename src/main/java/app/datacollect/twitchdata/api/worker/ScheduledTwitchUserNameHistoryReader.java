@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,7 @@ public class ScheduledTwitchUserNameHistoryReader {
   private final NameChangeAssembler nameChangeAssembler;
 
   public ScheduledTwitchUserNameHistoryReader(
-      TwitchDataFeedReader twitchDataFeedReader,
+      @Qualifier("chatMessageFeedReader") TwitchDataFeedReader twitchDataFeedReader,
       LastReadService lastReadService,
       TwitchUserService twitchUserService,
       TwitchUserAssembler twitchUserAssembler,

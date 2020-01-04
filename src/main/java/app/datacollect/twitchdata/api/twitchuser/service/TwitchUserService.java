@@ -39,6 +39,10 @@ public class TwitchUserService {
     return repository.getTwitchUser(id);
   }
 
+  public Optional<TwitchUser> getTwitchUser(String username) {
+    return repository.getTwitchUser(username);
+  }
+
   public List<TwitchUser> getTwitchUsers() {
     return repository.getTwitchUsers();
   }

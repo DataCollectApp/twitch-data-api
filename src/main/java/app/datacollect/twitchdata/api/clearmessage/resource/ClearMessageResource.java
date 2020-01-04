@@ -5,14 +5,16 @@ public class ClearMessageResource {
   private final String targetUsername;
   private final String channel;
   private final String message;
+  private final long userId;
   private final String time;
 
   public ClearMessageResource(
-      String id, String targetUsername, String channel, String message, String time) {
+      String id, String targetUsername, String channel, String message, long userId, String time) {
     this.id = id;
     this.targetUsername = targetUsername;
     this.channel = channel;
     this.message = message;
+    this.userId = userId;
     this.time = time;
   }
 
@@ -30,6 +32,10 @@ public class ClearMessageResource {
 
   public String getMessage() {
     return message;
+  }
+
+  public long getUserId() {
+    return userId;
   }
 
   public String getTime() {

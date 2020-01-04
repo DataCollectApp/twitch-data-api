@@ -50,6 +50,18 @@ public class TwitchUserRepository {
     }
   }
 
+  public Optional<TwitchUser> getTwitchUser(String username) {
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              "SELECT id, username, display_name, discovered_time, discovered_channel FROM twitch_user WHERE username = :username",
+              Map.of("username", username),
+              this::mapRow));
+    } catch (EmptyResultDataAccessException ex) {
+      return Optional.empty();
+    }
+  }
+
   public List<TwitchUser> getTwitchUsers() {
     return jdbcTemplate.query(
         "SELECT id, username, display_name, discovered_time, discovered_channel FROM twitch_user",

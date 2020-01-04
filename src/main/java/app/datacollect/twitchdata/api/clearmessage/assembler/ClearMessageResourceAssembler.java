@@ -15,6 +15,7 @@ public class ClearMessageResourceAssembler {
         clearMessage.getTargetUsername(),
         clearMessage.getChannel(),
         clearMessage.getMessage(),
+        clearMessage.getUserId(),
         clearMessage.getTime().iso8601());
   }
 

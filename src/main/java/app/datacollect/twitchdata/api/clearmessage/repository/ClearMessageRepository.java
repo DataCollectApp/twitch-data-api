@@ -24,19 +24,21 @@ public class ClearMessageRepository {
 
   public void insert(ClearMessage clearMessage) {
     jdbcTemplate.update(
-        "INSERT INTO clear_message(id, target_username, channel, message, time) VALUES (:id, :target_username, :channel, :message, :time)",
+        "INSERT INTO clear_message(id, target_username, channel, message, user_id, time) VALUES (:id, :target_username, :channel, :message, :user_id, :time)",
         new MapSqlParameterSource()
             .addValue("id", clearMessage.getId())
             .addValue("target_username", clearMessage.getTargetUsername())
             .addValue("channel", clearMessage.getChannel())
             .addValue("message", clearMessage.getMessage())
+            .addValue("user_id", clearMessage.getUserId())
             .addValue("time", clearMessage.getTime().iso8601()));
   }
 
   public List<ClearMessage> getAll(Optional<String> targetUsername, Optional<String> channel) {
     final Map<String, Object> params = new HashMap<>();
     final StringBuilder sql =
-        new StringBuilder("SELECT id, target_username, channel, message, time FROM clear_message");
+        new StringBuilder(
+            "SELECT id, target_username, channel, message, user_id, time FROM clear_message");
     if (targetUsername.isPresent() && channel.isPresent()) {
       sql.append(" WHERE target_username = :target_username AND channel = :channel");
       params.put("target_username", targetUsername.get());
@@ -57,6 +59,7 @@ public class ClearMessageRepository {
         resultSet.getString("target_username"),
         resultSet.getString("channel"),
         resultSet.getString("message"),
+        resultSet.getLong("user_id"),
         UTCDateTime.of(resultSet.getString("time")));
   }
 }

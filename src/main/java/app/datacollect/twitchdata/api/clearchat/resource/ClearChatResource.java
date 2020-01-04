@@ -3,7 +3,7 @@ package app.datacollect.twitchdata.api.clearchat.resource;
 public class ClearChatResource {
   private final String id;
   private final String targetUsername;
-  private final String targetUserId;
+  private final long targetUserId;
   private final String channel;
   private final long roomId;
   private final long seconds;
@@ -12,7 +12,7 @@ public class ClearChatResource {
   public ClearChatResource(
       String id,
       String targetUsername,
-      String targetUserId,
+      long targetUserId,
       String channel,
       long roomId,
       long seconds,
@@ -34,7 +34,7 @@ public class ClearChatResource {
     return targetUsername;
   }
 
-  public String getTargetUserId() {
+  public long getTargetUserId() {
     return targetUserId;
   }
 

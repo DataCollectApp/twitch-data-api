@@ -12,7 +12,7 @@ public class ClearChatAssembler {
     return new ClearChat(
         event.getId(),
         event.getTargetUsername(),
-        event.getTargetUserId(),
+        Long.parseLong(event.getTargetUserId()),
         event.getChannel(),
         event.getRoomId(),
         event.getSeconds(),

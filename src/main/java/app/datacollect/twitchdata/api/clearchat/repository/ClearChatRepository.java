@@ -58,7 +58,7 @@ public class ClearChatRepository {
     return new ClearChat(
         UUID.fromString(resultSet.getString("id")),
         resultSet.getString("target_username"),
-        resultSet.getString("target_user_id"),
+        resultSet.getLong("target_user_id"),
         resultSet.getString("channel"),
         resultSet.getLong("room_id"),
         resultSet.getLong("seconds"),

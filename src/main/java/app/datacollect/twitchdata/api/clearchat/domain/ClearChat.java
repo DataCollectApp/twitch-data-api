@@ -6,7 +6,7 @@ import java.util.UUID;
 public class ClearChat {
   private final UUID id;
   private final String targetUsername;
-  private final String targetUserId;
+  private final long targetUserId;
   private final String channel;
   private final long roomId;
   private final long seconds;
@@ -15,7 +15,7 @@ public class ClearChat {
   public ClearChat(
       UUID id,
       String targetUsername,
-      String targetUserId,
+      long targetUserId,
       String channel,
       long roomId,
       long seconds,
@@ -29,17 +29,6 @@ public class ClearChat {
     this.time = time;
   }
 
-  public ClearChat(
-      String targetUsername, String targetUserId, String channel, long roomId, long seconds) {
-    this.id = UUID.randomUUID();
-    this.targetUsername = targetUsername;
-    this.targetUserId = targetUserId;
-    this.channel = channel;
-    this.roomId = roomId;
-    this.seconds = seconds;
-    this.time = UTCDateTime.now();
-  }
-
   public UUID getId() {
     return id;
   }
@@ -48,7 +37,7 @@ public class ClearChat {
     return targetUsername;
   }
 
-  public String getTargetUserId() {
+  public long getTargetUserId() {
     return targetUserId;
   }
 

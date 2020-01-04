@@ -40,9 +40,9 @@ CREATE TABLE clear_chat
 (
     id              UUID PRIMARY KEY,
     target_username VARCHAR(64) NOT NULL,
-    target_user_id  VARCHAR(64) NOT NULL REFERENCES twitch_user (id),
+    target_user_id  BIGINT      NOT NULL REFERENCES twitch_user (id),
     channel         VARCHAR(64) NOT NULL,
-    room_id         VARCHAR(64) NOT NULL,
+    room_id         BIGINT      NOT NULL,
     seconds         VARCHAR(64) NOT NULL,
     time            VARCHAR(64) NOT NULL
 );
@@ -51,7 +51,7 @@ CREATE TABLE global_clear_chat
 (
     id      UUID PRIMARY KEY,
     channel VARCHAR(64) NOT NULL,
-    room_id VARCHAR(64) NOT NULL,
+    room_id BIGINT      NOT NULL,
     time    VARCHAR(64) NOT NULL
 );
 

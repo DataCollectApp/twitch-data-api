@@ -15,6 +15,6 @@ public class ClearMessageAssembler {
         event.getChannel(),
         event.getMessage(),
         userId,
-        UTCDateTime.of(event.getTargetUsername()));
+        UTCDateTime.of(event.getTime()));
   }
 }

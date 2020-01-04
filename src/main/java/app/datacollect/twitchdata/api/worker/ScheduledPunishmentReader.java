@@ -107,7 +107,7 @@ public class ScheduledPunishmentReader {
     }
 
     if (!events.isEmpty()) {
-      logger.info("Successfully processed '{}' events from the chat message feed", events.size());
+      logger.info("Successfully processed '{}' events from the punishment feed", events.size());
     }
   }
 

@@ -82,32 +82,45 @@ public class ScheduledPunishmentReader {
     final List<Event> events = twitchDataFeedReader.getPage();
 
     boolean success = true;
+    int eventsProcessed = 0;
+    Optional<String> lastProcessedId = Optional.empty();
     for (int i = 0; i < events.size() && success; i++) {
       final Event event = events.get(i);
-      if (event instanceof ClearMessageEventV1) {
-        success = process((ClearMessageEventV1) event);
-      } else if (event instanceof ClearChatEventV1) {
-        success = process((ClearChatEventV1) event);
-      } else if (event instanceof GlobalClearChatEventV1) {
-        success = process((GlobalClearChatEventV1) event);
+      if (event.getEventData() instanceof ClearMessageEventV1) {
+        success = process((ClearMessageEventV1) event.getEventData());
+      } else if (event.getEventData() instanceof ClearChatEventV1) {
+        success = process((ClearChatEventV1) event.getEventData());
+      } else if (event.getEventData() instanceof GlobalClearChatEventV1) {
+        success = process((GlobalClearChatEventV1) event.getEventData());
+      } else {
+        logger.warn(
+            "Encountered unexpected event with id '{}', type '{}', object type '{}' and version '{}'",
+            event.getMetadata().getEventId(),
+            event.getEventData().getEventType(),
+            event.getEventData().getObjectType(),
+            event.getEventData().getVersion());
+        success = false;
+      }
+      if (success) {
+        eventsProcessed++;
+        lastProcessedId = Optional.of(event.getMetadata().getEventId().toString());
       }
     }
 
     if (lastReadIdFromDb.isPresent()) {
-      final Optional<String> lastReadId = twitchDataFeedReader.getLastReadId();
-      if (lastReadId.isPresent() && !lastReadId.get().equals(lastReadIdFromDb.get())) {
-        lastReadService.updateLastReadId(LAST_READ_NAME, lastReadId.get());
+      if (lastProcessedId.isPresent() && !lastProcessedId.get().equals(lastReadIdFromDb.get())) {
+        lastReadService.updateLastReadId(LAST_READ_NAME, lastProcessedId.get());
       }
     } else {
-      twitchDataFeedReader
-          .getLastReadId()
-          .ifPresent(
-              currentLastReadId ->
-                  lastReadService.saveLastReadId(LAST_READ_NAME, currentLastReadId));
+      lastProcessedId.ifPresent(
+          currentLastReadId -> lastReadService.saveLastReadId(LAST_READ_NAME, currentLastReadId));
     }
 
     if (!events.isEmpty()) {
-      logger.info("Successfully processed '{}' events from the punishment feed", events.size());
+      logger.info(
+          "Successfully processed '{}' '{}' events from the punishment feed",
+          eventsProcessed,
+          events.size());
     }
   }
 

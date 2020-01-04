@@ -13,7 +13,6 @@ import app.datacollect.twitchdata.feed.events.chatmessage.v1.ChatMessageEventV1;
 import app.datacollect.twitchdata.feed.reader.TwitchDataFeedReader;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -70,13 +69,47 @@ public class ScheduledTwitchUserNameHistoryReader {
 
     final List<Event> events = twitchDataFeedReader.getPage();
 
-    final List<ChatMessageEventV1> chatMessageEvents =
-        events.stream()
-            .filter(e -> e instanceof ChatMessageEventV1)
-            .map(e -> (ChatMessageEventV1) e)
-            .collect(Collectors.toList());
+    boolean success = true;
+    int eventsProcessed = 0;
+    Optional<String> lastProcessedId = Optional.empty();
+    for (int i = 0; i < events.size() && success; i++) {
+      final Event event = events.get(i);
+      if (event.getEventData() instanceof ChatMessageEventV1) {
+        success =
+            process(
+                (ChatMessageEventV1) event.getEventData(),
+                event.getMetadata().getEventId().toString());
+      } else {
+        logger.warn(
+            "Encountered unexpected chat message event with id '{}'",
+            event.getMetadata().getEventId());
+        success = false;
+      }
+      if (success) {
+        eventsProcessed++;
+        lastProcessedId = Optional.of(event.getMetadata().getEventId().toString());
+      }
+    }
 
-    for (final ChatMessageEventV1 event : chatMessageEvents) {
+    if (lastReadIdFromDb.isPresent()) {
+      if (lastProcessedId.isPresent() && !lastProcessedId.get().equals(lastReadIdFromDb.get())) {
+        lastReadService.updateLastReadId(LAST_READ_NAME, lastProcessedId.get());
+      }
+    } else {
+      lastProcessedId.ifPresent(
+          currentLastReadId -> lastReadService.saveLastReadId(LAST_READ_NAME, currentLastReadId));
+    }
+
+    if (!events.isEmpty()) {
+      logger.info(
+          "Successfully processed '{}' of '{}' events from the chat message feed",
+          eventsProcessed,
+          events.size());
+    }
+  }
+
+  private boolean process(ChatMessageEventV1 event, String eventId) {
+    try {
       if (!INVALID_USER_ID_LIST.contains(event.getUserId())) {
         final Optional<TwitchUser> optionalTwitchUser =
             twitchUserService.getTwitchUser(event.getUserId());
@@ -98,31 +131,12 @@ public class ScheduledTwitchUserNameHistoryReader {
         }
       } else {
         invalidTwitchUserService.saveInvalidTwitchUser(invalidTwitchUserAssembler.assemble(event));
-        logger.info(
-            "Saved invalid user with id '{}' and username '{}'",
-            event.getUserId(),
-            event.getUsername());
       }
-    }
-
-    if (lastReadIdFromDb.isPresent()) {
-      final Optional<String> lastReadId = twitchDataFeedReader.getLastReadId();
-      if (lastReadId.isPresent() && !lastReadId.get().equals(lastReadIdFromDb.get())) {
-        lastReadService.updateLastReadId(LAST_READ_NAME, lastReadId.get());
-      }
-    } else {
-      twitchDataFeedReader
-          .getLastReadId()
-          .ifPresent(
-              currentLastReadId ->
-                  lastReadService.saveLastReadId(LAST_READ_NAME, currentLastReadId));
-    }
-
-    if (!events.isEmpty()) {
-      logger.info(
-          "Successfully processed '{}' of '{}' events from the chat message feed",
-          chatMessageEvents.size(),
-          events.size());
+      return true;
+    } catch (Exception ex) {
+      logger.error(
+          "Exception occurred while processing chat message event with id '{}'", eventId, ex);
+      return false;
     }
   }
 }

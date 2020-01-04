@@ -8,6 +8,7 @@ import app.datacollect.twitchdata.api.config.FeatureToggle;
 import app.datacollect.twitchdata.api.globalclearchat.assembler.GlobalClearChatAssembler;
 import app.datacollect.twitchdata.api.globalclearchat.service.GlobalClearChatService;
 import app.datacollect.twitchdata.api.lastread.service.LastReadService;
+import app.datacollect.twitchdata.api.twitchuser.assembler.TwitchUserAssembler;
 import app.datacollect.twitchdata.api.twitchuser.domain.TwitchUser;
 import app.datacollect.twitchdata.api.twitchuser.service.TwitchUserService;
 import app.datacollect.twitchdata.feed.events.Event;
@@ -41,6 +42,7 @@ public class ScheduledPunishmentReader {
   private final GlobalClearChatService globalClearChatService;
   private final GlobalClearChatAssembler globalClearChatAssembler;
   private final TwitchUserService twitchUserService;
+  private final TwitchUserAssembler twitchUserAssembler;
 
   public ScheduledPunishmentReader(
       @Qualifier("punishmentFeedReader") TwitchDataFeedReader twitchDataFeedReader,
@@ -52,7 +54,8 @@ public class ScheduledPunishmentReader {
       ClearChatAssembler clearChatAssembler,
       GlobalClearChatService globalClearChatService,
       GlobalClearChatAssembler globalClearChatAssembler,
-      TwitchUserService twitchUserService) {
+      TwitchUserService twitchUserService,
+      TwitchUserAssembler twitchUserAssembler) {
     this.twitchDataFeedReader = twitchDataFeedReader;
     this.lastReadService = lastReadService;
     this.featureToggle = featureToggle;
@@ -63,6 +66,7 @@ public class ScheduledPunishmentReader {
     this.globalClearChatService = globalClearChatService;
     this.globalClearChatAssembler = globalClearChatAssembler;
     this.twitchUserService = twitchUserService;
+    this.twitchUserAssembler = twitchUserAssembler;
   }
 
   @Scheduled(fixedDelay = 5000)
@@ -150,8 +154,12 @@ public class ScheduledPunishmentReader {
 
   private boolean process(ClearChatEventV1 event, String eventId) {
     try {
-      final Optional<TwitchUser> twitchUser =
+      Optional<TwitchUser> twitchUser =
           twitchUserService.getTwitchUser(Long.parseLong(event.getTargetUserId()));
+      if (twitchUser.isEmpty()) {
+        twitchUserService.saveTwitchUser(twitchUserAssembler.assemble(event));
+        twitchUser = twitchUserService.getTwitchUser(Long.parseLong(event.getTargetUserId()));
+      }
       if (twitchUser.isEmpty()) {
         logger.error(
             "No twitch user with username '{}' found when processing clear chat event with id '{}'",

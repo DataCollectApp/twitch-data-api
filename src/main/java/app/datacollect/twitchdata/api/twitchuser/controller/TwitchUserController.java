@@ -6,11 +6,15 @@ import app.datacollect.twitchdata.api.common.validation.ErrorMessage;
 import app.datacollect.twitchdata.api.common.validation.RequestParamValidator;
 import app.datacollect.twitchdata.api.twitchuser.assembler.TwitchUserResourceAssembler;
 import app.datacollect.twitchdata.api.twitchuser.resource.TwitchUserResource;
+import app.datacollect.twitchdata.api.twitchuser.resource.TwitchUserSearch;
 import app.datacollect.twitchdata.api.twitchuser.service.TwitchUserService;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +48,10 @@ public class TwitchUserController {
   @GetMapping("/{id}")
   public ResponseEntity<TwitchUserResource> getTwitchUser(@PathVariable("id") long id) {
     return service.getTwitchUser(id).map(twitchUser -> ResponseEntity.ok(resourceAssembler.assemble(twitchUser))).orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/search")
+  public ResponseEntity<List<TwitchUserResource>> search(@RequestBody TwitchUserSearch twitchUserSearch) {
+    return ResponseEntity.ok(resourceAssembler.assemble(service.getTwitchUsers(twitchUserSearch.getUserIds())));
   }
 }

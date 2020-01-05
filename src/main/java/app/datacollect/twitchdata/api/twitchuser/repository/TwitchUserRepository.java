@@ -68,6 +68,13 @@ public class TwitchUserRepository {
         this::mapRow);
   }
 
+  public List<TwitchUser> getTwitchUsers(List<Long> userIds) {
+    return jdbcTemplate.query(
+        "SELECT id, username, display_name, discovered_time, discovered_channel FROM twitch_user WHERE id IN (:user_ids)",
+        Map.of("user_ids", userIds),
+        this::mapRow);
+  }
+
   public List<TwitchUser> getTwitchUsers(SortBy sortBy, SortDirection sortDirection, int limit) {
     return jdbcTemplate.query(
         "SELECT id, username, display_name, discovered_time, discovered_channel "

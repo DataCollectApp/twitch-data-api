@@ -54,6 +54,10 @@ public class TwitchUserService {
     return repository.getTwitchUsers();
   }
 
+  public List<TwitchUser> getTwitchUsers(List<Long> userIds) {
+    return repository.getTwitchUsers(userIds);
+  }
+
   public List<TwitchUser> getTwitchUsers(SortBy sortBy, SortDirection sortDirection, int limit) {
     return repository.getTwitchUsers(sortBy, sortDirection, limit);
   }

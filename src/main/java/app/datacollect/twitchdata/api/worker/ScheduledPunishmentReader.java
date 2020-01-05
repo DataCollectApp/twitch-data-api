@@ -1,5 +1,6 @@
 package app.datacollect.twitchdata.api.worker;
 
+import app.datacollect.lastread.service.LastReadService;
 import app.datacollect.twitchdata.api.clearchat.assembler.ClearChatAssembler;
 import app.datacollect.twitchdata.api.clearchat.service.ClearChatService;
 import app.datacollect.twitchdata.api.clearmessage.assembler.ClearMessageAssembler;
@@ -7,7 +8,6 @@ import app.datacollect.twitchdata.api.clearmessage.service.ClearMessageService;
 import app.datacollect.twitchdata.api.config.FeatureToggle;
 import app.datacollect.twitchdata.api.globalclearchat.assembler.GlobalClearChatAssembler;
 import app.datacollect.twitchdata.api.globalclearchat.service.GlobalClearChatService;
-import app.datacollect.twitchdata.api.lastread.service.LastReadService;
 import app.datacollect.twitchdata.api.twitchuser.assembler.TwitchUserAssembler;
 import app.datacollect.twitchdata.api.twitchuser.domain.TwitchUser;
 import app.datacollect.twitchdata.api.twitchuser.service.TwitchUserService;

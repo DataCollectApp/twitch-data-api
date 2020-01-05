@@ -1,8 +1,8 @@
 package app.datacollect.twitchdata.api.worker;
 
+import app.datacollect.lastread.service.LastReadService;
 import app.datacollect.twitchdata.api.invalidtwitchuser.assembler.InvalidTwitchUserAssembler;
 import app.datacollect.twitchdata.api.invalidtwitchuser.service.InvalidTwitchUserService;
-import app.datacollect.twitchdata.api.lastread.service.LastReadService;
 import app.datacollect.twitchdata.api.namechange.assembler.NameChangeAssembler;
 import app.datacollect.twitchdata.api.namechange.service.NameChangeService;
 import app.datacollect.twitchdata.api.twitchuser.assembler.TwitchUserAssembler;

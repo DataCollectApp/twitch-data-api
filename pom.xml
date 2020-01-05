@@ -22,6 +22,7 @@
 
     <twitch-data-feed-reader.version>0.2.0</twitch-data-feed-reader.version>
     <time.version>0.1.0</time.version>
+    <last-read.version>0.1.0</last-read.version>
 
     <json.version>20180813</json.version>
     <swagger.version>2.9.2</swagger.version>
@@ -39,14 +40,9 @@
       </snapshots>
     </repository>
     <repository>
-      <id>github-twitch-data-feed-reader</id>
+      <id>github-datacollectapp</id>
       <name>GitHub Data Collector Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/DataCollectApp/twitch-data-feed-reader</url>
-    </repository>
-    <repository>
-      <id>github-time</id>
-      <name>GitHub Data Collector Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/DataCollectApp/time</url>
+      <url>https://maven.pkg.github.com/DataCollectApp/X</url>
     </repository>
   </repositories>
 
@@ -114,6 +110,11 @@
       <groupId>app.datacollect</groupId>
       <artifactId>time</artifactId>
       <version>${time.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>app.datacollect</groupId>
+      <artifactId>last-read</artifactId>
+      <version>${last-read.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

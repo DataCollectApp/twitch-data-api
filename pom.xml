@@ -22,7 +22,7 @@
 
     <twitch-data-feed-reader.version>0.2.0</twitch-data-feed-reader.version>
     <time.version>0.1.0</time.version>
-    <last-read.version>0.1.0</last-read.version>
+    <last-read.version>0.1.1</last-read.version>
 
     <json.version>20180813</json.version>
     <swagger.version>2.9.2</swagger.version>

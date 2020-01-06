@@ -8,6 +8,8 @@ import app.datacollect.twitchdata.api.clearmessage.service.ClearMessageService;
 import app.datacollect.twitchdata.api.config.FeatureToggle;
 import app.datacollect.twitchdata.api.globalclearchat.assembler.GlobalClearChatAssembler;
 import app.datacollect.twitchdata.api.globalclearchat.service.GlobalClearChatService;
+import app.datacollect.twitchdata.api.namechange.assembler.NameChangeAssembler;
+import app.datacollect.twitchdata.api.namechange.service.NameChangeService;
 import app.datacollect.twitchdata.api.twitchuser.assembler.TwitchUserAssembler;
 import app.datacollect.twitchdata.api.twitchuser.domain.TwitchUser;
 import app.datacollect.twitchdata.api.twitchuser.service.TwitchUserService;
@@ -43,6 +45,8 @@ public class ScheduledPunishmentReader {
   private final GlobalClearChatAssembler globalClearChatAssembler;
   private final TwitchUserService twitchUserService;
   private final TwitchUserAssembler twitchUserAssembler;
+  private final NameChangeService nameChangeService;
+  private final NameChangeAssembler nameChangeAssembler;
 
   public ScheduledPunishmentReader(
       @Qualifier("punishmentFeedReader") TwitchDataFeedReader twitchDataFeedReader,
@@ -55,7 +59,9 @@ public class ScheduledPunishmentReader {
       GlobalClearChatService globalClearChatService,
       GlobalClearChatAssembler globalClearChatAssembler,
       TwitchUserService twitchUserService,
-      TwitchUserAssembler twitchUserAssembler) {
+      TwitchUserAssembler twitchUserAssembler,
+      NameChangeService nameChangeService,
+      NameChangeAssembler nameChangeAssembler) {
     this.twitchDataFeedReader = twitchDataFeedReader;
     this.lastReadService = lastReadService;
     this.featureToggle = featureToggle;
@@ -67,6 +73,8 @@ public class ScheduledPunishmentReader {
     this.globalClearChatAssembler = globalClearChatAssembler;
     this.twitchUserService = twitchUserService;
     this.twitchUserAssembler = twitchUserAssembler;
+    this.nameChangeService = nameChangeService;
+    this.nameChangeAssembler = nameChangeAssembler;
   }
 
   @Scheduled(fixedDelay = 5000)
@@ -158,6 +166,7 @@ public class ScheduledPunishmentReader {
           twitchUserService.getTwitchUser(Long.parseLong(event.getTargetUserId()));
       if (twitchUser.isEmpty()) {
         twitchUserService.saveTwitchUser(twitchUserAssembler.assemble(event));
+        nameChangeService.saveNameChange(nameChangeAssembler.assemble(event, Optional.empty()));
         twitchUser = twitchUserService.getTwitchUser(Long.parseLong(event.getTargetUserId()));
       }
       if (twitchUser.isEmpty()) {

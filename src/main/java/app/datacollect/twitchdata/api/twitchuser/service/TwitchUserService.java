@@ -43,11 +43,7 @@ public class TwitchUserService {
   }
 
   public Optional<TwitchUser> getTwitchUser(String username) {
-    final Optional<TwitchUser> twitchUser = repository.getTwitchUser(username);
-    if (twitchUser.isPresent()) {
-      return twitchUser;
-    }
-    return nameChangeService.getNameChangesByOldUsername(username).stream().findFirst().flatMap(nameChange -> repository.getTwitchUser(nameChange.getUserId()));
+    return repository.getTwitchUser(username);
   }
 
   public List<TwitchUser> getTwitchUsers() {

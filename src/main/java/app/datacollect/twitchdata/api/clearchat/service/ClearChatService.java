@@ -2,8 +2,9 @@ package app.datacollect.twitchdata.api.clearchat.service;
 
 import app.datacollect.twitchdata.api.clearchat.domain.ClearChat;
 import app.datacollect.twitchdata.api.clearchat.repository.ClearChatRepository;
+import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
+import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ClearChatService {
         clearChat.getTargetUsername());
   }
 
-  public List<ClearChat> getAll(Optional<String> targetUsername, Optional<String> channel) {
-    return repository.getAll(targetUsername, channel);
+  public List<ClearChat> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {
+    return repository.getAll(sortBy, sortDirection, limit);
   }
 }

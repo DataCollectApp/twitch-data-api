@@ -1,11 +1,11 @@
-package app.datacollect.twitchdata.api.clearmessage.controller;
+package app.datacollect.twitchdata.api.globalclearchat.controller;
 
-import app.datacollect.twitchdata.api.clearmessage.assembler.ClearMessageResourceAssembler;
-import app.datacollect.twitchdata.api.clearmessage.service.ClearMessageService;
 import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
 import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import app.datacollect.twitchdata.api.common.validation.ErrorMessage;
 import app.datacollect.twitchdata.api.common.validation.RequestParamValidator;
+import app.datacollect.twitchdata.api.globalclearchat.assembler.GlobalClearChatResourceAssembler;
+import app.datacollect.twitchdata.api.globalclearchat.service.GlobalClearChatService;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("clear-message")
-public class ClearMessageController {
+@RequestMapping("global-clear-chat")
+public class GlobalClearChatController {
 
-  private final ClearMessageService service;
-  private final ClearMessageResourceAssembler resourceAssembler;
+  private final GlobalClearChatService service;
+  private final GlobalClearChatResourceAssembler resourceAssembler;
   private final RequestParamValidator requestParamValidator;
 
-  public ClearMessageController(
-      ClearMessageService service,
-      ClearMessageResourceAssembler resourceAssembler,
+  public GlobalClearChatController(
+      GlobalClearChatService service,
+      GlobalClearChatResourceAssembler resourceAssembler,
       RequestParamValidator requestParamValidator) {
     this.service = service;
     this.resourceAssembler = resourceAssembler;

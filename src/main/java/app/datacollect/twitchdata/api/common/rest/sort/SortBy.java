@@ -1,7 +1,8 @@
 package app.datacollect.twitchdata.api.common.rest.sort;
 
 public enum SortBy {
-  DISCOVERED_TIME("discoveredTime", "discovered_time");
+  DISCOVERED_TIME("discoveredTime", "discovered_time"),
+  TIME("time", "time");
 
   private final String resourceName;
   private final String databaseName;

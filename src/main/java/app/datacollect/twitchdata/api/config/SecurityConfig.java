@@ -20,6 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) {
-    web.ignoring().mvcMatchers(HttpMethod.GET, "/twitch-user/**", "/name-change/**");
+    web.ignoring()
+        .mvcMatchers(
+            HttpMethod.GET,
+            "/twitch-user/**",
+            "/name-change/**",
+            "/clear-message/**",
+            "/clear-chat/**",
+            "/global-clear-chat/**");
   }
 }

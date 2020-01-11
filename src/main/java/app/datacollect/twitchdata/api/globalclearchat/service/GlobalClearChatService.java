@@ -1,5 +1,7 @@
 package app.datacollect.twitchdata.api.globalclearchat.service;
 
+import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
+import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import app.datacollect.twitchdata.api.globalclearchat.domain.GlobalClearChat;
 import app.datacollect.twitchdata.api.globalclearchat.repository.GlobalClearChatRepository;
 import java.util.List;
@@ -30,7 +32,7 @@ public class GlobalClearChatService {
         globalClearChat.getRoomId());
   }
 
-  public List<GlobalClearChat> getAll() {
-    return repository.getAll();
+  public List<GlobalClearChat> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {
+    return repository.getAll(sortBy, sortDirection, limit);
   }
 }

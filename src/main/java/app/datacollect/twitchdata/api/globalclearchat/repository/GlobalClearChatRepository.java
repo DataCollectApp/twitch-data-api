@@ -1,6 +1,8 @@
 package app.datacollect.twitchdata.api.globalclearchat.repository;
 
 import app.datacollect.time.UTCDateTime;
+import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
+import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import app.datacollect.twitchdata.api.globalclearchat.domain.GlobalClearChat;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,9 +35,12 @@ public class GlobalClearChatRepository {
             globalClearChat.getTime().iso8601()));
   }
 
-  public List<GlobalClearChat> getAll() {
+  public List<GlobalClearChat> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {
     return jdbcTemplate.query(
-        "SELECT id, channel, room_id, time FROM global_clear_chat", this::mapRow);
+        "SELECT id, channel, room_id, time "
+            + "FROM global_clear_chat "
+            + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName() + " LIMIT " + limit,
+        this::mapRow);
   }
 
   private GlobalClearChat mapRow(ResultSet resultSet, int rowNum) throws SQLException {

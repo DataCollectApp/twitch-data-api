@@ -2,12 +2,11 @@ package app.datacollect.twitchdata.api.clearchat.repository;
 
 import app.datacollect.time.UTCDateTime;
 import app.datacollect.twitchdata.api.clearchat.domain.ClearChat;
+import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
+import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -35,23 +34,12 @@ public class ClearChatRepository {
             .addValue("time", clearChat.getTime().iso8601()));
   }
 
-  public List<ClearChat> getAll(Optional<String> targetUsername, Optional<String> channel) {
-    final Map<String, Object> params = new HashMap<>();
-    final StringBuilder sql =
-        new StringBuilder(
-            "SELECT id, target_username, target_user_id, channel, room_id, seconds, time FROM clear_chat");
-    if (targetUsername.isPresent() && channel.isPresent()) {
-      sql.append(" WHERE target_username = :target_username AND channel = :channel");
-      params.put("target_username", targetUsername.get());
-      params.put("channel", channel.get());
-    } else if (targetUsername.isPresent()) {
-      sql.append(" WHERE target_username = :target_username");
-      params.put("target_username", targetUsername.get());
-    } else if (channel.isPresent()) {
-      sql.append(" WHERE channel = :channel");
-      params.put("channel", channel.get());
-    }
-    return jdbcTemplate.query(sql.toString(), params, this::mapRow);
+  public List<ClearChat> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {
+    return jdbcTemplate.query(
+        "SELECT id, target_username, target_user_id, channel, room_id, seconds, time "
+            + "FROM clear_chat "
+            + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName() + " LIMIT " + limit,
+        this::mapRow);
   }
 
   private ClearChat mapRow(ResultSet resultSet, int rowNum) throws SQLException {

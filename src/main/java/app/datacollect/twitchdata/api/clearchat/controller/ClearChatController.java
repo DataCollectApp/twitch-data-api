@@ -32,7 +32,7 @@ public class ClearChatController {
 
   @GetMapping
   public ResponseEntity<?> getAll(
-      @RequestParam(value = "sortBy", defaultValue = "discoveredTime") SortBy sortBy,
+      @RequestParam(value = "sortBy", defaultValue = "time") SortBy sortBy,
       @RequestParam(value = "sortDirection", defaultValue = "ASC") SortDirection sortDirection,
       @RequestParam(value = "limit", defaultValue = "100") int limit) {
     final Optional<ErrorMessage> errorMessage = requestParamValidator.validateLimit(limit);

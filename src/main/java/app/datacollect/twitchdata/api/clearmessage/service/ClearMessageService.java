@@ -5,6 +5,7 @@ import app.datacollect.twitchdata.api.clearmessage.repository.ClearMessageReposi
 import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
 import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,10 @@ public class ClearMessageService {
         "Saved clear message with user id '{}' and username '{}'",
         clearMessage.getUserId(),
         clearMessage.getTargetUsername());
+  }
+
+  public int getClearMessageCount() {
+    return Optional.ofNullable(repository.getClearMessageCount()).orElse(-1);
   }
 
   public List<ClearMessage> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {

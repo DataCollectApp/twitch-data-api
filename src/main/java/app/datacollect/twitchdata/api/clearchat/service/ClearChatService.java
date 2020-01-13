@@ -5,6 +5,7 @@ import app.datacollect.twitchdata.api.clearchat.repository.ClearChatRepository;
 import app.datacollect.twitchdata.api.common.rest.sort.SortBy;
 import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,10 @@ public class ClearChatService {
         "Saved clear chat with user id '{}' and username '{}'",
         clearChat.getTargetUserId(),
         clearChat.getTargetUsername());
+  }
+
+  public int getClearChatCount() {
+    return Optional.ofNullable(repository.getClearChatCount()).orElse(-1);
   }
 
   public List<ClearChat> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {

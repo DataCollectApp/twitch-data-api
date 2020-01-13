@@ -43,6 +43,11 @@ public class GlobalClearChatRepository {
         this::mapRow);
   }
 
+  public Integer getGlobalClearChatCount() {
+    return jdbcTemplate.queryForObject(
+        "SELECT count(id) FROM global_clear_chat", Map.of(), Integer.class);
+  }
+
   private GlobalClearChat mapRow(ResultSet resultSet, int rowNum) throws SQLException {
     return new GlobalClearChat(
         UUID.fromString(resultSet.getString("id")),

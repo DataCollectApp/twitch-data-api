@@ -7,6 +7,7 @@ import app.datacollect.twitchdata.api.common.rest.sort.SortDirection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -40,6 +41,10 @@ public class ClearChatRepository {
             + "FROM clear_chat "
             + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName() + " LIMIT " + limit,
         this::mapRow);
+  }
+
+  public Integer getClearChatCount() {
+    return jdbcTemplate.queryForObject("SELECT count(id) FROM clear_chat", Map.of(), Integer.class);
   }
 
   private ClearChat mapRow(ResultSet resultSet, int rowNum) throws SQLException {

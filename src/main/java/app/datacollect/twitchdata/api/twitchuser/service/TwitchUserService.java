@@ -58,6 +58,10 @@ public class TwitchUserService {
     return repository.getTwitchUsers(sortBy, sortDirection, limit);
   }
 
+  public int getTwitchUserCount() {
+    return Optional.ofNullable(repository.getTwitchUserCount()).orElse(-1);
+  }
+
   public void updateTwitchUser(long id, String username, String displayName) {
     logger.debug(
         "Updating username and display name to '{}' ('{}') for twitch user with id '{}'",

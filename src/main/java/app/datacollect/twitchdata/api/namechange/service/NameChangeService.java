@@ -57,4 +57,8 @@ public class NameChangeService {
       long userId, SortBy sortBy, SortDirection sortDirection, boolean excludeOrigin) {
     return repository.getNameChangesByUserId(userId, sortBy, sortDirection, excludeOrigin);
   }
+
+  public int getNameChangeCount() {
+    return Optional.ofNullable(repository.getNameChangeCount(true)).orElse(-1);
+  }
 }

@@ -78,6 +78,15 @@ public class NameChangeRepository {
         this::mapRow);
   }
 
+  public Integer getNameChangeCount(boolean excludeOrigin) {
+    return jdbcTemplate.queryForObject(
+        "SELECT count(id) "
+            + "FROM name_change "
+            + (excludeOrigin ? "WHERE old_username IS NOT NULL " : ""),
+        Map.of(),
+        Integer.class);
+  }
+
   public List<NameChange> getNameChangesByUserId(
       long userId, SortBy sortBy, SortDirection sortDirection, boolean excludeOrigin) {
     return jdbcTemplate.query(
@@ -101,5 +110,9 @@ public class NameChangeRepository {
         resultSet.getString("new_username"),
         UTCDateTime.of(resultSet.getString("discovered_time")),
         resultSet.getString("discovered_channel"));
+  }
+
+  private Integer mapCount(ResultSet resultSet, int rowNum) throws SQLException {
+    return resultSet.getInt("name_change_count");
   }
 }

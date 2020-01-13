@@ -83,6 +83,11 @@ public class TwitchUserRepository {
         this::mapRow);
   }
 
+  public Integer getTwitchUserCount() {
+    return jdbcTemplate.queryForObject(
+        "SELECT count(id) FROM twitch_user", Map.of(), Integer.class);
+  }
+
   public void updateTwitchUser(long id, String username, String displayName) {
     jdbcTemplate.update(
         "UPDATE twitch_user SET username = :username, display_name = :display_name WHERE id = :id",

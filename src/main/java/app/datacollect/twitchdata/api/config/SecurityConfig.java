@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/name-change/**",
             "/clear-message/**",
             "/clear-chat/**",
-            "/global-clear-chat/**");
+            "/global-clear-chat/**",
+            "/statistics/counters/**");
   }
 }

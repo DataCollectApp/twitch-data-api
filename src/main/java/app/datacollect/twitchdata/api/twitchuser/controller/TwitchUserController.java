@@ -50,6 +50,11 @@ public class TwitchUserController {
     return service.getTwitchUser(id).map(twitchUser -> ResponseEntity.ok(resourceAssembler.assemble(twitchUser))).orElse(ResponseEntity.notFound().build());
   }
 
+  @GetMapping
+  public ResponseEntity<TwitchUserResource> getTwitchUserByUsername(@RequestParam("username") String username) {
+    return service.getTwitchUser(username).map(twitchUser -> ResponseEntity.ok(resourceAssembler.assemble(twitchUser))).orElse(ResponseEntity.notFound().build());
+  }
+
   @PostMapping("/search")
   public ResponseEntity<List<TwitchUserResource>> search(@RequestBody TwitchUserSearch twitchUserSearch) {
     return ResponseEntity.ok(resourceAssembler.assemble(service.getTwitchUsers(twitchUserSearch.getUserIds())));

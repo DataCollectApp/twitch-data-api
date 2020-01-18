@@ -34,12 +34,16 @@ public class ClearChatController {
   public ResponseEntity<?> getAll(
       @RequestParam(value = "sortBy", defaultValue = "time") SortBy sortBy,
       @RequestParam(value = "sortDirection", defaultValue = "ASC") SortDirection sortDirection,
-      @RequestParam(value = "limit", defaultValue = "100") int limit) {
+      @RequestParam(value = "limit", defaultValue = "100") int limit,
+      @RequestParam("targetUserId") Optional<Long> targetUserId) {
     final Optional<ErrorMessage> errorMessage = requestParamValidator.validateLimit(limit);
     if (errorMessage.isPresent()) {
       return ResponseEntity.badRequest().body(errorMessage.get());
     }
-    return ResponseEntity.ok(
-        resourceAssembler.assemble(service.getAll(sortBy, sortDirection, limit)));
+    final var nameChanges =
+        targetUserId
+            .map(t -> service.getAllByTargetUserId(sortBy, sortDirection, t))
+            .orElse(service.getAll(sortBy, sortDirection, limit));
+    return ResponseEntity.ok(resourceAssembler.assemble(nameChanges));
   }
 }

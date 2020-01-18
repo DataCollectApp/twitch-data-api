@@ -40,4 +40,8 @@ public class ClearChatService {
   public List<ClearChat> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {
     return repository.getAll(sortBy, sortDirection, limit);
   }
+
+  public List<ClearChat> getAllByTargetUserId(SortBy sortBy, SortDirection sortDirection, long targetUserId) {
+    return repository.getAllByTargetUserId(sortBy, sortDirection, targetUserId);
+  }
 }

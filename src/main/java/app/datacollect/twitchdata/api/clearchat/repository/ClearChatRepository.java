@@ -43,6 +43,17 @@ public class ClearChatRepository {
         this::mapRow);
   }
 
+  public List<ClearChat> getAllByTargetUserId(
+      SortBy sortBy, SortDirection sortDirection, long targetUserId) {
+    return jdbcTemplate.query(
+        "SELECT id, target_username, target_user_id, channel, room_id, seconds, time "
+            + "FROM clear_chat "
+            + "WHERE target_user_id = :target_user_id "
+            + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName(),
+        Map.of("target_user_id", targetUserId),
+        this::mapRow);
+  }
+
   public Integer getClearChatCount() {
     return jdbcTemplate.queryForObject("SELECT count(id) FROM clear_chat", Map.of(), Integer.class);
   }

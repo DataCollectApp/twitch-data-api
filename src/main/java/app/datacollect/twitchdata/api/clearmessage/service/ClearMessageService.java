@@ -40,4 +40,9 @@ public class ClearMessageService {
   public List<ClearMessage> getAll(SortBy sortBy, SortDirection sortDirection, int limit) {
     return repository.getAll(sortBy, sortDirection, limit);
   }
+
+  public List<ClearMessage> getAllByUserId(
+      SortBy sortBy, SortDirection sortDirection, long userId) {
+    return repository.getAllByUserId(sortBy, sortDirection, userId);
+  }
 }

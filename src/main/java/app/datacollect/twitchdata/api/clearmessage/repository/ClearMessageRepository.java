@@ -42,6 +42,16 @@ public class ClearMessageRepository {
         this::mapRow);
   }
 
+  public List<ClearMessage> getAllByUserId(SortBy sortBy, SortDirection sortDirection, long userId) {
+    return jdbcTemplate.query(
+        "SELECT id, target_username, channel, message, user_id, time "
+            + "FROM clear_message "
+            + "WHERE user_id = :user_id "
+            + "ORDER BY " + sortBy.getDatabaseName() + " " + sortDirection.getDatabaseName(),
+        Map.of("user_id", userId),
+        this::mapRow);
+  }
+
   public Integer getClearMessageCount() {
     return jdbcTemplate.queryForObject(
         "SELECT count(id) FROM clear_message", Map.of(), Integer.class);

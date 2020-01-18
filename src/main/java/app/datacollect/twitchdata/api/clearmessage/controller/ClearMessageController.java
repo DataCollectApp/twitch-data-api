@@ -34,12 +34,16 @@ public class ClearMessageController {
   public ResponseEntity<?> getAll(
       @RequestParam(value = "sortBy", defaultValue = "time") SortBy sortBy,
       @RequestParam(value = "sortDirection", defaultValue = "ASC") SortDirection sortDirection,
-      @RequestParam(value = "limit", defaultValue = "100") int limit) {
+      @RequestParam(value = "limit", defaultValue = "100") int limit,
+      @RequestParam("userId") Optional<Long> userId) {
     final Optional<ErrorMessage> errorMessage = requestParamValidator.validateLimit(limit);
     if (errorMessage.isPresent()) {
       return ResponseEntity.badRequest().body(errorMessage.get());
     }
-    return ResponseEntity.ok(
-        resourceAssembler.assemble(service.getAll(sortBy, sortDirection, limit)));
+    final var nameChanges =
+        userId
+            .map(u -> service.getAllByUserId(sortBy, sortDirection, u))
+            .orElse(service.getAll(sortBy, sortDirection, limit));
+    return ResponseEntity.ok(resourceAssembler.assemble(nameChanges));
   }
 }

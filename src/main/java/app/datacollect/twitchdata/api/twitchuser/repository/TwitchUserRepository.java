@@ -75,6 +75,13 @@ public class TwitchUserRepository {
         this::mapRow);
   }
 
+  public List<TwitchUser> getTwitchUsersByPartialUsername(String partialUsername) {
+    return jdbcTemplate.query(
+        "SELECT id, username, display_name, discovered_time, discovered_channel FROM twitch_user WHERE username LIKE :partial_username_query",
+        Map.of("partial_username_query", partialUsername + "%"),
+        this::mapRow);
+  }
+
   public List<TwitchUser> getTwitchUsers(SortBy sortBy, SortDirection sortDirection, int limit) {
     return jdbcTemplate.query(
         "SELECT id, username, display_name, discovered_time, discovered_channel "

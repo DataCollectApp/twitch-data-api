@@ -54,6 +54,10 @@ public class TwitchUserService {
     return repository.getTwitchUsers(userIds);
   }
 
+  public List<TwitchUser> getTwitchUsersForAutoComplete(String query) {
+    return repository.getTwitchUsersByPartialUsername(query);
+  }
+
   public List<TwitchUser> getTwitchUsers(SortBy sortBy, SortDirection sortDirection, int limit) {
     return repository.getTwitchUsers(sortBy, sortDirection, limit);
   }

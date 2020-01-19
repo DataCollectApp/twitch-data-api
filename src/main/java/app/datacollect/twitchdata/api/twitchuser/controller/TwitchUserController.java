@@ -59,4 +59,9 @@ public class TwitchUserController {
   public ResponseEntity<List<TwitchUserResource>> search(@RequestBody TwitchUserSearch twitchUserSearch) {
     return ResponseEntity.ok(resourceAssembler.assemble(service.getTwitchUsers(twitchUserSearch.getUserIds())));
   }
+
+  @GetMapping("/auto-complete/{query}")
+  public ResponseEntity<List<TwitchUserResource>> search(@PathVariable("query") String query) {
+    return ResponseEntity.ok(resourceAssembler.assemble(service.getTwitchUsersForAutoComplete(query)));
+  }
 }

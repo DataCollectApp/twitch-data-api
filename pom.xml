@@ -20,7 +20,7 @@
 
     <java.version>13</java.version>
 
-    <twitch-data-feed-reader.version>0.2.0</twitch-data-feed-reader.version>
+    <twitch-data-feed-reader.version>0.2.1</twitch-data-feed-reader.version>
     <time.version>0.1.0</time.version>
     <last-read.version>0.1.1</last-read.version>
 
